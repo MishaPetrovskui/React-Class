@@ -62,6 +62,8 @@ function Profile({ name = "None", email = "none@gmail.com", gender }) {
           >
             <option>MAN</option>
             <option>WOMAN</option>
+            <option>Vakasalewalewa</option>
+            <option>Сroissant</option>
           </select>
           <button type="submit">Save</button>
         </form>
