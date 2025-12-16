@@ -26,11 +26,12 @@ function Note({ text }) {
   );
 }
 
-function Profile({ name = "None", email = "none@gmail.com", gender }) {
+function Profile({ profile }) {
   const [isEdit, setIsEdit] = useState(false);
-  const [textName, setTextName] = useState(name);
-  const [textEmail, setTextEmail] = useState(email);
-  const [textGender, setTextGender] = useState(gender);
+  const [profileData, setProfileData] = useState(profile);
+  // const [textName, setTextName] = useState(name);
+  // const [textEmail, setTextEmail] = useState(email);
+  // const [textGender, setTextGender] = useState(gender);
 
   return (
     <>
@@ -39,25 +40,37 @@ function Profile({ name = "None", email = "none@gmail.com", gender }) {
         <form onSubmit={() => setIsEdit(false)}>
           <p>Name:</p>
           <textarea
-            value={textName}
+            value={profileData.name}
             onChange={(e) => {
-              setTextName(e.target.value);
+              setProfileData({
+                name: e.target.value,
+                email: profileData.email,
+                gender: profileData.gender,
+              });
             }}
             required
           ></textarea>
           <p>Email:</p>
           <textarea
-            value={textEmail}
+            value={profileData.email}
             onChange={(e) => {
-              setTextEmail(e.target.value);
+              setProfileData({
+                name: profileData.name,
+                email: e.target.value,
+                gender: profileData.gender,
+              });
             }}
             required
           ></textarea>
           <p>Gender:</p>
           <select
-            value={textGender}
+            value={profileData.gender}
             onChange={(e) => {
-              setTextGender(e.target.value);
+              setProfileData({
+                name: profileData.name,
+                email: profileData.email,
+                gender: e.target.value,
+              });
             }}
           >
             <option>MAN</option>
@@ -69,9 +82,9 @@ function Profile({ name = "None", email = "none@gmail.com", gender }) {
         </form>
       ) : (
         <>
-          <p>Name: {textName}</p>
-          <p>Email: {textEmail}</p>
-          <p>Gender: {textGender}</p>
+          <p>Name: {profileData.name}</p>
+          <p>Email: {profileData.email}</p>
+          <p>Gender: {profileData.gender}</p>
           <button onClick={() => setIsEdit(true)}>Edit</button>
         </>
       )}
@@ -83,7 +96,13 @@ export default function App() {
   return (
     <>
       {/* <Note text="Hello world!" /> */}
-      <Profile name="Admin" email="Admin@gmail.com" gender={"MAN"} />
+      <Profile
+        profile={{
+          name: "Admin",
+          email: "Admin@gmail.com",
+          gender: "Vakasalewalewa",
+        }}
+      />
     </>
   );
 }
