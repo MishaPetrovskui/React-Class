@@ -2,3 +2,24 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+main {
+  min-height: 100vh;
+  background-color: aliceblue;
+  background-color: aliceblue;
+}
+
+main.theme1 {
+  background-color: aliceblue;
+  color: #000;
+}
+
+main.theme2 {
+  background-color: rgb(15, 13, 13);
+  color: white;
+}
+
+main.theme3 {
+  background-color: #1e3a8a;
+  color: #e5e7eb;
+}
