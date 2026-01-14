@@ -1,29 +1,125 @@
-import "./styles.css";
+import { createPortal } from "react-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import "./styles.css";
 
-function Counted({ btn1, btn2, btn3 }) {
-  const [clicked, setClick] = useState(0);
+function ModalWindow({ onClose, onAddTask }) {
+  const [taskText, setTaskText] = useState("");
 
-  function Click(input) {
-    setClick(clicked + input);
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (taskText.trim()) {
+      onAddTask(taskText);
+      setTaskText("");
+      onClose();
+    }
+  };
 
   return (
     <>
-      <div className="App">
-        <h1>{clicked}</h1>
-        <button onClick={() => Click(btn1)}>{btn1}</button>
-        <button onClick={() => Click(btn2)}>{btn2}</button>
-        <button onClick={() => Click(btn3)}>{btn3}</button>
-      </div>
+      {createPortal(
+        <div className="modal-wrapper" onClick={onClose}>
+          <div
+            className="modal"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <h3>Додати нову задачу</h3>
+            <div>
+              <input
+                className="input"
+                type="text"
+                value={taskText}
+                onChange={(e) => setTaskText(e.target.value)}
+                placeholder="Введіть текст задачі"
+              />
+              <div className="modal-buttons">
+                <button type="button" onClick={onClose} className="cancel">
+                  Скасувати
+                </button>
+                <button type="button" onClick={handleSubmit} className="add">
+                  Додати
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.getElementById("modal-root")
+      )}
     </>
   );
 }
 
 export default function App() {
+  const navigate = useNavigate();
+  const [tasks, setTasks] = useState([
+    {
+      id: 1,
+      text: "Вивчити React",
+    },
+    {
+      id: 2,
+      text: "Зробити домашнє завдання",
+    },
+    {
+      id: 3,
+      text: "Прочитати книгу",
+    },
+  ]);
+
+  const addTask = (text) => {
+    const newTask = {
+      id: Date.now(),
+      text: text,
+    };
+    setTasks([...tasks, newTask]);
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
   return (
-    <>
-      <Counted btn1={1} btn2={-1} btn3={10} />
-    </>
+    <div className="container">
+      <h2>Мої задачі</h2>
+      <button
+        onClick={() => {
+          navigate("/modal");
+        }}
+        className="add-task"
+      >
+        Додати задачу
+      </button>
+
+      <ul className="list">
+        {tasks.map((task) => (
+          <li key={task.id} className="item">
+            <span>{task.text}</span>
+            <button onClick={() => deleteTask(task.id)} className="delete">
+              Видалити
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {tasks.length === 0 && (
+        <p className="empty-message">Немає задач. Додайте нову задачу!</p>
+      )}
+
+      <Routes>
+        <Route
+          path="/modal"
+          element={
+            <ModalWindow
+              onClose={() => {
+                navigate("/");
+              }}
+              onAddTask={addTask}
+            />
+          }
+        />
+      </Routes>
+    </div>
   );
 }
