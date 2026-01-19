@@ -6,13 +6,19 @@ function App() {
   const [number, setNumber] = useState(0);
   const [doubleNumber, setDoubleNumber] = useState(0);
   const [facts, setFact] = useState([]);
-
   const addFact = (text) => {
     const newFact = {
       id: Date.now(),
       text: text,
     };
     setFact([...facts, newFact]);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (getNewFact()) {
+      addFact(getNewFact());
+    }
   };
 
   useEffect(() => {
@@ -22,7 +28,10 @@ function App() {
   function getNewFact()
   {
     fetch("https://meowfacts.herokuapp.com/?count=1").then((response) => response.json())
-    .then((fact) => {console.log(fact); setMeowFact(fact['data'])})
+    .then((fact) => {
+      console.log(fact); 
+      const newFact = {id: Date.now(), text: fact['data'], }; 
+      setFact([...facts, newFact]);})
     .catch((e) => console.error(e));
   }
 
@@ -33,20 +42,17 @@ function App() {
     <>
       <h2>Hello world!</h2>
       <p>{meowFact}</p>
-      <button onClick={getNewFact()}>Change</button>
+      <button onClick={handleSubmit}>Change</button>
       <input type='number' value={number} onChange={(e) => {setNumber(e.target.value)}} />
       <p>{doubleNumber}</p>
-      {/* <ul className="list">
-        {facts.map((task) => (
-          <li key={task.id} className="item">
+      <ul className="list">
+        {[...facts].reverse().map((task, index) => (
+          <li key={task.id} className={index === 0 ? 'first-item' : 'regular-item'}
+      style={{ fontWeight: index === 0 ? 'bold' : 'normal' }}>
             <span>{task.text}</span>
           </li>
         ))}
-      </ul> */}
-{/* 
-      {facts.length === 0 && (
-        <p className="empty-message">Немає фактів. Додайте нові факти!</p>
-      )} */}
+      </ul>
     </>
   );
 }
