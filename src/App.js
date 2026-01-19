@@ -1,29 +1,54 @@
-import "./styles.css";
-import { useState } from "react";
+import './App.css';
+import { useState, useEffect } from 'react';
 
-function Counted({ btn1, btn2, btn3 }) {
-  const [clicked, setClick] = useState(0);
+function App() {
+  const [meowFact, setMeowFact] = useState();
+  const [number, setNumber] = useState(0);
+  const [doubleNumber, setDoubleNumber] = useState(0);
+  const [facts, setFact] = useState([]);
 
-  function Click(input) {
-    setClick(clicked + input);
+  const addFact = (text) => {
+    const newFact = {
+      id: Date.now(),
+      text: text,
+    };
+    setFact([...facts, newFact]);
+  };
+
+  useEffect(() => {
+    setDoubleNumber(number * 2)
+  }, [number])
+
+  function getNewFact()
+  {
+    fetch("https://meowfacts.herokuapp.com/?count=1").then((response) => response.json())
+    .then((fact) => {console.log(fact); setMeowFact(fact['data'])})
+    .catch((e) => console.error(e));
   }
 
+  useEffect (() => {
+    getNewFact();
+  }, [])
   return (
     <>
-      <div className="App">
-        <h1>{clicked}</h1>
-        <button onClick={() => Click(btn1)}>{btn1}</button>
-        <button onClick={() => Click(btn2)}>{btn2}</button>
-        <button onClick={() => Click(btn3)}>{btn3}</button>
-      </div>
+      <h2>Hello world!</h2>
+      <p>{meowFact}</p>
+      <button onClick={getNewFact()}>Change</button>
+      <input type='number' value={number} onChange={(e) => {setNumber(e.target.value)}} />
+      <p>{doubleNumber}</p>
+      {/* <ul className="list">
+        {facts.map((task) => (
+          <li key={task.id} className="item">
+            <span>{task.text}</span>
+          </li>
+        ))}
+      </ul> */}
+{/* 
+      {facts.length === 0 && (
+        <p className="empty-message">Немає фактів. Додайте нові факти!</p>
+      )} */}
     </>
   );
 }
 
-export default function App() {
-  return (
-    <>
-      <Counted btn1={1} btn2={-1} btn3={10} />
-    </>
-  );
-}
+export default App;
