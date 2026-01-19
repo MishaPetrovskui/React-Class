@@ -1,8 +1,9 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 
-function App() {
-  const [meowFact, setMeowFact] = useState();
+function MeowFact()
+{
+   const [meowFact, setMeowFact] = useState();
   const [number, setNumber] = useState(0);
   const [doubleNumber, setDoubleNumber] = useState(0);
   const [facts, setFact] = useState([]);
@@ -53,6 +54,39 @@ function App() {
           </li>
         ))}
       </ul>
+    </>
+  );
+}
+
+
+function App() {
+  const [currencyFrom, setCurrencyFrom] = useState(0);
+  const [currencyTo, setCurrencyTo] = useState(0);
+  const currencyRate = 0.06;
+
+  function convertTo()
+  {
+    setCurrencyTo(currencyFrom * currencyRate)
+  }
+  function convertFrom()
+  {
+    setCurrencyFrom(currencyTo / currencyRate)
+  }
+
+  // useEffect (() => {
+  //   convertTo();
+  // }, [currencyFrom])
+  // useEffect (() => {
+  //   convertFrom();
+  // }, [currencyTo])
+  return (
+    <>
+      <input type="number" value={currencyFrom} onChange={(e) => {
+        setCurrencyFrom(e.target.value); convertTo();
+      }} placeholder="FROM" />
+      <input type="number" value={currencyTo} onChange={(e) => {
+        setCurrencyTo(e.target.value); convertFrom();
+      }} placeholder="TO" />
     </>
   );
 }
